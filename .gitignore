@@ -1,0 +1,33 @@
+# IntelliJ IDEA project files
+*.iml
+.idea/
+*.ipr
+*.iws
+
+# Gradle files
+.gradle/
+build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Log files
+*.log
+
+# Android Studio specific files
+/captures/
+/.externalNativeBuild
+.cxx
+
+# User-specific files
+.DS_Store
+
+# VS Code specific files
+.vscode/
+
+# Kotlin specific files
+.kotlin/
+
+# Generated files
+gen/
+out/
