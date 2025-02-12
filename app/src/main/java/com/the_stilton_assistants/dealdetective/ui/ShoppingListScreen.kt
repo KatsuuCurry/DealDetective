@@ -16,7 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -86,12 +88,18 @@ fun ShoppingListScreen(
                 if (shoppingListUiState is ShoppingListUiState.Display) {
                     val state = shoppingListUiState as ShoppingListUiState.Display
                     Text(
-                        text = "Totale: ${state.totalAmount} €",
+                        text = buildAnnotatedString {
+                            withStyle(MaterialTheme.typography.titleLarge.toSpanStyle()) {
+                                append("Totale: ")
+                            }
+                            withStyle(MaterialTheme.typography.displaySmall.toSpanStyle()) {
+                                append(state.totalAmount.toString())
+                            }
+                        },
                         textAlign = TextAlign.Right,
                         modifier = Modifier
                             .padding(16.dp)
                             .fillMaxSize(),
-                        style = MaterialTheme.typography.displaySmall,
                     )
                 }
             }

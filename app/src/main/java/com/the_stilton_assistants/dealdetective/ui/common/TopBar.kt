@@ -1,10 +1,10 @@
 package com.the_stilton_assistants.dealdetective.ui.common
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -16,13 +16,12 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.the_stilton_assistants.dealdetective.DealDetectiveApplication
 import com.the_stilton_assistants.dealdetective.R
 import com.the_stilton_assistants.dealdetective.ui.navigation.ScreenRoute
+import com.the_stilton_assistants.dealdetective.ui.utils.appContainer
 import com.the_stilton_assistants.dealdetective.util.WifiStatus
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,22 +50,23 @@ fun TopBar(
             )
         },
         actions = {
-            val app = (LocalContext.current.applicationContext as DealDetectiveApplication)
             if (wifiStatusState == null) {
-                val wifiStatusState by app.appContainer.wifiStatusState.collectAsStateWithLifecycle()
+                val wifiStatusState by appContainer().wifiStatusState.collectAsStateWithLifecycle()
                 if (wifiStatusState != WifiStatus.Status.Available) {
                     Icon(
-                        modifier = modifier,
-                        imageVector = Icons.Default.Warning,
-                        contentDescription = "Search",
+                        modifier = modifier.padding(horizontal = 8.dp),
+                        painter = painterResource(id = R.drawable.wifi_off),
+                        contentDescription = "Wifi Off",
+                        tint = MaterialTheme.colorScheme.error,
                     )
                 }
             } else {
                 if (wifiStatusState != WifiStatus.Status.Available) {
                     Icon(
-                        modifier = modifier,
-                        imageVector = Icons.Default.Warning,
-                        contentDescription = "Search",
+                        modifier = modifier.padding(horizontal = 8.dp),
+                        painter = painterResource(id = R.drawable.wifi_off),
+                        contentDescription = "Wifi Off",
+                        tint = MaterialTheme.colorScheme.error,
                     )
                 }
             }

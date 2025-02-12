@@ -2,10 +2,10 @@ package com.the_stilton_assistants.dealdetective.ui.common
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -56,9 +56,10 @@ fun DealsTopBar(
         actions = {
             if (wifiStatusState != WifiStatus.Status.Available) {
                 Icon(
-                    modifier = modifier,
-                    imageVector = Icons.Default.Warning,
-                    contentDescription = "Search",
+                    modifier = modifier.padding(horizontal = 8.dp),
+                    painter = painterResource(id = R.drawable.wifi_off),
+                    contentDescription = "Wifi Off",
+                    tint = MaterialTheme.colorScheme.error,
                 )
             }
             Image(
@@ -90,7 +91,7 @@ fun DealsTopBar(
                         Icon(
                             modifier = modifier,
                             imageVector = Icons.Default.Refresh,
-                            contentDescription = "Search",
+                            contentDescription = "Refresh",
                         )
                     }
                 }

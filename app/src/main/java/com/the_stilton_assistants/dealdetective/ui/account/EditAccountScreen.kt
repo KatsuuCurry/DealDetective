@@ -1,7 +1,6 @@
 package com.the_stilton_assistants.dealdetective.ui.account
 
 import android.net.Uri
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,26 +9,32 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImagePainter
-import coil3.compose.rememberAsyncImagePainter
+import coil3.compose.AsyncImage
+import coil3.request.CachePolicy
+import coil3.request.ImageRequest
 import com.koalas.trackmybudget.ui.utils.getColumnModifier
 import com.koalas.trackmybudget.ui.utils.getScrollBehaviorAndModifier
 import com.the_stilton_assistants.dealdetective.R
@@ -38,7 +43,9 @@ import com.the_stilton_assistants.dealdetective.ui.common.LoadingComponent
 import com.the_stilton_assistants.dealdetective.ui.common.TopBar
 import com.the_stilton_assistants.dealdetective.ui.navigation.AccountRoute
 import com.the_stilton_assistants.dealdetective.ui.navigation.ScreenRoute
+import com.the_stilton_assistants.dealdetective.ui.utils.appContainer
 import com.the_stilton_assistants.dealdetective.ui.utils.handleOperationState
+import com.the_stilton_assistants.dealdetective.ui.utils.isWifiAvailable
 import com.the_stilton_assistants.dealdetective.util.IImagePicker.Companion.ImagePickerError
 import com.the_stilton_assistants.dealdetective.util.rememberImagePicker
 import com.the_stilton_assistants.dealdetective.util.rememberNotificationBubbleHandler
@@ -70,7 +77,7 @@ fun EditAccountScreen(
         topBar = {
             TopBar(
                 modifier = modifier,
-                title = "Modifica Dati Account",
+                title = "Modifica Account",
                 navLambdaRoute = AccountRoute,
                 navLambda = navLambda,
                 scrollBehavior = scrollBehavior,
@@ -98,6 +105,8 @@ fun EditAccountScreen(
             modifier = columnModifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            val wifiStatusState by appContainer().wifiStatusState.collectAsStateWithLifecycle()
+            var key by rememberSaveable { mutableStateOf(false) }
             var image: Uri? by rememberSaveable { mutableStateOf(account.photoUrl) }
             val imagePicker = rememberImagePicker { uri, error ->
                 if (error == ImagePickerError.NoError) {
@@ -105,6 +114,7 @@ fun EditAccountScreen(
                         return@rememberImagePicker
                     }
                     image = uri
+                    key = !key
                     notificationBubbleHandler.displayBubble(
                         message = "Immagine selezionata",
                     )
@@ -115,49 +125,41 @@ fun EditAccountScreen(
                 }
             }
 
-            val painter = rememberAsyncImagePainter(image)
-            val imgState by painter.state.collectAsStateWithLifecycle()
-            if (imgState is AsyncImagePainter.State.Success) {
-                Image(
-                    painter = imgState.painter!!,
-                    contentDescription = null,
+            key(key) {
+                val defaultPainter = painterResource(id = R.drawable.user_box)
+                val errorPainter = rememberVectorPainter(Icons.Default.Clear)
+                val loadingPainter = rememberVectorPainter(Icons.Default.Refresh)
+                var isSuccess by remember { mutableStateOf(false) }
+                AsyncImage(
                     modifier = modifier
-                        .size(164.dp)
-                        .clip(CircleShape)
+                        .size(182.dp)
                         .padding(16.dp)
-                        .clickable(enabled = enabled) {
+                        .clip(CircleShape)
+                        .clickable {
                             imagePicker.pickImage()
                         },
-                )
-            } else if (imgState is AsyncImagePainter.State.Loading || image == null) {
-                Icon(
-                    painter = painterResource(id = R.drawable.user_box),
-                    contentDescription = null,
-                    modifier = modifier
-                        .size(164.dp)
-                        .clip(CircleShape)
-                        .padding(16.dp)
-                        .clickable(enabled = enabled) {
-                            imagePicker.pickImage()
-                        },
-                )
-            } else if (imgState is AsyncImagePainter.State.Error) {
-                Icon(
-                    imageVector = Icons.Default.Clear,
-                    contentDescription = null,
-                    modifier = modifier
-                        .size(164.dp)
-                        .clip(CircleShape)
-                        .padding(16.dp)
-                        .clickable(enabled = enabled) {
-                            imagePicker.pickImage()
-                        },
-                )
-            } else {
-                CircularProgressIndicator(
-                    modifier = modifier
-                        .size(164.dp)
-                        .padding(16.dp),
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(image)
+                        .diskCachePolicy(CachePolicy.DISABLED)
+                        .memoryCachePolicy(CachePolicy.DISABLED)
+                        .build(),
+                    contentDescription = "Account Image",
+                    placeholder = loadingPainter,
+                    error = errorPainter,
+                    fallback = defaultPainter,
+                    colorFilter = if (isSuccess)
+                        null
+                    else
+                        ColorFilter.tint(LocalContentColor.current),
+                    onError = {
+                        isSuccess = false
+                    },
+                    onSuccess = {
+                        isSuccess = true
+                    },
+                    onLoading = {
+                        isSuccess = false
+                    },
                 )
             }
 
@@ -166,18 +168,19 @@ fun EditAccountScreen(
                 text = "Clicca sull'immagine per cambiarla",
             )
 
-            Button(
-                modifier = modifier.padding(16.dp),
-                onClick = {
-                    image = null
-                    imagePicker.clearImage()
-                },
-                enabled = enabled,
-            ) {
-                Text(
-                    modifier = modifier,
-                    text = "Rimuovi Immagine",
-                )
+            if (image != null) {
+                Button(
+                    modifier = modifier.padding(16.dp),
+                    onClick = {
+                        image = null
+                    },
+                    enabled = enabled,
+                ) {
+                    Text(
+                        modifier = modifier,
+                        text = "Rimuovi Immagine",
+                    )
+                }
             }
 
             Text(
@@ -199,12 +202,15 @@ fun EditAccountScreen(
             Button(
                 modifier = modifier.padding(16.dp),
                 onClick = {
+                    if (image == null) {
+                        imagePicker.clearImage()
+                    }
                     viewModel.updateAccount(
                         displayName = displayName,
                         image = image
                     )
                 },
-                enabled = enabled,
+                enabled = enabled && isWifiAvailable(wifiStatusState),
             ) {
                 Text(
                     modifier = modifier,

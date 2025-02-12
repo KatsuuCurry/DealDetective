@@ -190,14 +190,18 @@ fun SettingsScreen(
             )
 
             Text(
-                modifier = modifier.fillMaxWidth().padding(16.dp),
+                modifier = modifier.fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 16.dp, bottom = 8.dp),
                 text = "Filtro Notifiche",
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Start,
             )
             var expanded by remember { mutableStateOf(false) }
             ExposedDropdownMenuBox(
-                modifier = modifier.padding(16.dp),
+                modifier = modifier
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 4.dp),
                 expanded = expanded,
                 onExpandedChange = {
                     expanded = if (enabled) {

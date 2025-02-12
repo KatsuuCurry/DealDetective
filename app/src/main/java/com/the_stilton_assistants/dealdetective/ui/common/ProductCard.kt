@@ -73,14 +73,6 @@ fun ProductCard(
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center,
         ) {
-            Image(
-                painter = painterResource(id = id),
-                contentDescription = "Store Logo",
-                modifier = modifier
-                    .size(32.dp)
-                    .padding(4.dp)
-                    .align(Alignment.TopStart),
-            )
             if (image == null) {
                 Image(
                     painter = painterResource(id = R.drawable.app_logo),
@@ -109,6 +101,14 @@ fun ProductCard(
                         .fillMaxWidth(),
                 )
             }
+            Image(
+                painter = painterResource(id = id),
+                contentDescription = "Store Logo",
+                modifier = modifier
+                    .size(32.dp)
+                    .padding(4.dp)
+                    .align(Alignment.TopStart),
+            )
         }
 
         val boldText = if (settingsUiState is SettingsUiState.Display) {

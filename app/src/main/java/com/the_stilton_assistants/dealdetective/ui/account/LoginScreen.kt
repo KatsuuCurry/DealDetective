@@ -37,6 +37,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.koalas.trackmybudget.ui.utils.getColumnModifier
 import com.koalas.trackmybudget.ui.utils.getScrollBehaviorAndModifier
 import com.the_stilton_assistants.dealdetective.R
@@ -45,7 +46,9 @@ import com.the_stilton_assistants.dealdetective.ui.navigation.AccountRoute
 import com.the_stilton_assistants.dealdetective.ui.navigation.RegisterRoute
 import com.the_stilton_assistants.dealdetective.ui.navigation.ScreenRoute
 import com.the_stilton_assistants.dealdetective.ui.navigation.SettingsRoute
+import com.the_stilton_assistants.dealdetective.ui.utils.appContainer
 import com.the_stilton_assistants.dealdetective.ui.utils.handleOperationState
+import com.the_stilton_assistants.dealdetective.ui.utils.isWifiAvailable
 import com.the_stilton_assistants.dealdetective.viewmodel.AccountViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,6 +86,7 @@ fun LoginScreen(
             )
         }
     ) { innerPadding ->
+        val wifiStatusState by appContainer().wifiStatusState.collectAsStateWithLifecycle()
         val columnModifier = getColumnModifier(modifier, innerPadding)
         Column(
             modifier = columnModifier
@@ -183,7 +187,8 @@ fun LoginScreen(
                     passwordVisible = false
                     viewModel.signIn(email, password)
                 },
-                enabled = enabled && email.isNotEmpty() && password.isNotEmpty(),
+                enabled = enabled && email.isNotEmpty() && password.isNotEmpty()
+                        && isWifiAvailable(wifiStatusState),
             ) {
                 Text(
                     text = "Accedi",
@@ -261,7 +266,7 @@ fun LoginScreen(
                                     sendingPasswordRequest = true
                                     viewModel.sendPasswordResetEmail(emailReset)
                                 },
-                                enabled = enabled && emailReset.isNotBlank(),
+                                enabled = enabled && emailReset.isNotBlank() && isWifiAvailable(wifiStatusState),
                             ) {
                                 Text(
                                     modifier = modifier,

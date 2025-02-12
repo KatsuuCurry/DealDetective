@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.koalas.trackmybudget.ui.utils.getColumnModifier
 import com.koalas.trackmybudget.ui.utils.getScrollBehaviorAndModifier
 import com.the_stilton_assistants.dealdetective.R
@@ -40,7 +41,9 @@ import com.the_stilton_assistants.dealdetective.ui.navigation.AccountRoute
 import com.the_stilton_assistants.dealdetective.ui.navigation.LoginRoute
 import com.the_stilton_assistants.dealdetective.ui.navigation.ScreenRoute
 import com.the_stilton_assistants.dealdetective.ui.navigation.SettingsRoute
+import com.the_stilton_assistants.dealdetective.ui.utils.appContainer
 import com.the_stilton_assistants.dealdetective.ui.utils.handleOperationState
+import com.the_stilton_assistants.dealdetective.ui.utils.isWifiAvailable
 import com.the_stilton_assistants.dealdetective.viewmodel.AccountViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,6 +53,7 @@ fun RegisterScreen(
     navLambda: (ScreenRoute) -> Unit,
     viewModel: AccountViewModel,
 ) {
+    val wifiStatusState by appContainer().wifiStatusState.collectAsStateWithLifecycle()
     val enabled = handleOperationState(
         viewModel = viewModel,
         onSuccess = {
@@ -200,7 +204,8 @@ fun RegisterScreen(
                     confirmPasswordVisible = false
                     viewModel.signUp(email, password)
                 },
-                enabled = enabled && email.isNotEmpty() && password.isNotEmpty() && password == confirmPassword,
+                enabled = enabled && email.isNotEmpty() && password.isNotEmpty()
+                        && password == confirmPassword && isWifiAvailable(wifiStatusState),
             ) {
                 Text(
                     text = "Registrati",

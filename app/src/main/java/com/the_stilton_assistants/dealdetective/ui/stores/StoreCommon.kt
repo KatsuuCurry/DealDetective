@@ -13,14 +13,18 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.the_stilton_assistants.dealdetective.model.StoreSettings
 import com.the_stilton_assistants.dealdetective.model.storeOrNull
 import com.the_stilton_assistants.dealdetective.ui.navigation.EsselungaRoute
 import com.the_stilton_assistants.dealdetective.ui.navigation.ScreenRoute
+import com.the_stilton_assistants.dealdetective.ui.utils.appContainer
+import com.the_stilton_assistants.dealdetective.ui.utils.isWifiAvailable
 import com.the_stilton_assistants.dealdetective.viewmodel.StoresViewModel
 
 @Composable
@@ -77,6 +81,7 @@ fun SelectableStore(
                 )
             }
         }
+        val wifiStatusState by appContainer().wifiStatusState.collectAsStateWithLifecycle()
         Checkbox(
             modifier = modifier
                 .weight(0.2f)
@@ -89,7 +94,7 @@ fun SelectableStore(
                     viewModel.removeStore(storeId)
                 }
             },
-            enabled = enabled,
+            enabled = enabled && (isWifiAvailable(wifiStatusState) || storeSettings.storeOrNull != null),
         )
     }
 }
@@ -124,6 +129,7 @@ fun ToggleStore(
             text = storeName,
             style = MaterialTheme.typography.titleLarge,
         )
+        val wifiStatusState by appContainer().wifiStatusState.collectAsStateWithLifecycle()
         Checkbox(
             modifier = modifier
                 .weight(0.2f)
@@ -136,7 +142,7 @@ fun ToggleStore(
                     viewModel.disableStore(storeId)
                 }
             },
-            enabled = enabled,
+            enabled = enabled && (isWifiAvailable(wifiStatusState) || storeSettings.storeOrNull != null),
         )
     }
 }

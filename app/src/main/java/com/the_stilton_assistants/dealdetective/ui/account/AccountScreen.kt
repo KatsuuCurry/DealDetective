@@ -2,7 +2,6 @@ package com.the_stilton_assistants.dealdetective.ui.account
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,30 +21,36 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil3.compose.AsyncImagePainter
-import coil3.compose.rememberAsyncImagePainter
+import coil3.compose.AsyncImage
+import coil3.request.CachePolicy
+import coil3.request.ImageRequest
 import com.koalas.trackmybudget.ui.utils.getScrollBehaviorAndModifier
 import com.the_stilton_assistants.dealdetective.R
 import com.the_stilton_assistants.dealdetective.ui.common.LoadingComponent
@@ -54,7 +59,9 @@ import com.the_stilton_assistants.dealdetective.ui.navigation.AccountRoute
 import com.the_stilton_assistants.dealdetective.ui.navigation.EditAccountRoute
 import com.the_stilton_assistants.dealdetective.ui.navigation.ScreenRoute
 import com.the_stilton_assistants.dealdetective.ui.navigation.SettingsRoute
+import com.the_stilton_assistants.dealdetective.ui.utils.appContainer
 import com.the_stilton_assistants.dealdetective.ui.utils.handleOperationState
+import com.the_stilton_assistants.dealdetective.ui.utils.isWifiAvailable
 import com.the_stilton_assistants.dealdetective.viewmodel.AccountDatabaseViewModel
 import com.the_stilton_assistants.dealdetective.viewmodel.AccountUiState
 import com.the_stilton_assistants.dealdetective.viewmodel.AccountViewModel
@@ -70,6 +77,7 @@ fun AccountScreen(
         factory = AccountDatabaseViewModel.Factory,
     ),
 ) {
+    val wifiStatusState by appContainer().wifiStatusState.collectAsStateWithLifecycle()
     var signingOut by rememberSaveable { mutableStateOf(false) }
     val enabledAcc = handleOperationState(
         viewModel = accountViewModel,
@@ -93,6 +101,7 @@ fun AccountScreen(
                 title = "Account",
                 navLambdaRoute = SettingsRoute,
                 navLambda = navLambda,
+                wifiStatusState = wifiStatusState,
                 scrollBehavior = scrollBehavior,
             )
         }
@@ -112,42 +121,39 @@ fun AccountScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             val user = (appUiState as AccountUiState.User).user
-            val painter = rememberAsyncImagePainter(user.photoUrl)
-            val imgState by painter.state.collectAsStateWithLifecycle()
-            if (imgState is AsyncImagePainter.State.Success) {
-                Image(
-                    painter = imgState.painter!!,
-                    contentDescription = null,
-                    modifier = modifier
-                        .size(164.dp)
-                        .clip(CircleShape)
-                        .padding(16.dp),
-                )
-            } else if (imgState is AsyncImagePainter.State.Loading || user.photoUrl == null) {
-                Icon(
-                    painter = painterResource(id = R.drawable.user_box),
-                    contentDescription = null,
-                    modifier = modifier
-                        .size(164.dp)
-                        .clip(CircleShape)
-                        .padding(16.dp),
-                )
-            } else if (imgState is AsyncImagePainter.State.Error) {
-                Icon(
-                    imageVector = Icons.Default.Clear,
-                    contentDescription = null,
-                    modifier = modifier
-                        .size(164.dp)
-                        .clip(CircleShape)
-                        .padding(16.dp),
-                )
-            } else {
-                CircularProgressIndicator(
-                    modifier = modifier
-                        .size(164.dp)
-                        .padding(16.dp),
-                )
-            }
+
+            val defaultPainter = painterResource(id = R.drawable.user_box)
+            val errorPainter = rememberVectorPainter(Icons.Default.Clear)
+            val loadingPainter = rememberVectorPainter(Icons.Default.Refresh)
+            var isSuccess by remember { mutableStateOf(false) }
+            AsyncImage(
+                modifier = modifier
+                    .size(182.dp)
+                    .padding(16.dp)
+                    .clip(CircleShape),
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(user.photoUrl)
+                    .diskCachePolicy(CachePolicy.DISABLED)
+                    .memoryCachePolicy(CachePolicy.DISABLED)
+                    .build(),
+                contentDescription = "Account Image",
+                placeholder = loadingPainter,
+                error = errorPainter,
+                fallback = defaultPainter,
+                colorFilter = if (isSuccess)
+                    null
+                else
+                    ColorFilter.tint(LocalContentColor.current),
+                onError = {
+                    isSuccess = false
+                },
+                onSuccess = {
+                    isSuccess = true
+                },
+                onLoading = {
+                    isSuccess = false
+                },
+            )
 
             val displayName = user.displayName ?: "Non specificato"
 
@@ -202,7 +208,7 @@ fun AccountScreen(
                 onClick = {
                     accountDBViewModel.uploadUserData()
                 },
-                enabled = enabledAcc && enabledAccDB,
+                enabled = enabledAcc && enabledAccDB && isWifiAvailable(wifiStatusState),
             ) {
                 Icon(
                     modifier = modifier,
@@ -221,7 +227,7 @@ fun AccountScreen(
                 onClick = {
                     accountDBViewModel.retrieveUserData()
                 },
-                enabled = enabledAcc && enabledAccDB,
+                enabled = enabledAcc && enabledAccDB && isWifiAvailable(wifiStatusState),
             ) {
                 Icon(
                     modifier = modifier,
@@ -256,7 +262,7 @@ fun AccountScreen(
                     onClick = {
                         accountViewModel.sendEmailVerification()
                     },
-                    enabled = enabledAcc && enabledAccDB,
+                    enabled = enabledAcc && enabledAccDB && isWifiAvailable(wifiStatusState),
                 ) {
                     Icon(
                         modifier = modifier,
@@ -276,7 +282,7 @@ fun AccountScreen(
                 onClick = {
                     accountViewModel.sendPasswordResetEmail(user.email!!)
                 },
-                enabled = enabledAcc && enabledAccDB,
+                enabled = enabledAcc && enabledAccDB && isWifiAvailable(wifiStatusState),
             ) {
                 Icon(
                     modifier = modifier,
