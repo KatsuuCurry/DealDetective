@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1085099284096",
+    "firebase_url": "https://dealdetective-6b469-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "dealdetective-6b469",
+    "storage_bucket": "dealdetective-6b469.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1085099284096:android:4d07e053f347fd09aa3865",
+        "android_client_info": {
+          "package_name": "com.the_stilton_assistants.dealdetective"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLHwRI7Bmq_iJNXfScBsd3fMNiI8khOS0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

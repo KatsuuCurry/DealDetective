@@ -1,19 +1,20 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.protobuf)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
     alias(libs.plugins.kotlin.compose)
-    kotlin("plugin.serialization")
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.google.services)
 }
 
 android {
-    namespace = "com.example.dealdetective"
+    namespace = "com.the_stilton_assistants.dealdetective"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.dealdetective"
+        applicationId = "com.the_stilton_assistants.dealdetective"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
@@ -26,12 +27,22 @@ android {
     }
 
     buildTypes {
-        release {
+        debug {
+            isDebuggable = true
+            isJniDebuggable = true
             isMinifyEnabled = false
+            isShrinkResources = false
+        }
+        release {
+            isDebuggable = false
+            isJniDebuggable = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -76,7 +87,7 @@ android {
 }
 
 dependencies {
-
+    /* COMPOSE */
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -93,10 +104,13 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    /* KTOR */
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
 
-    implementation(libs.ksoup)
+    /* KSOUP */
+    implementation(libs.ksoup.kotlinx)
+    implementation(libs.ksoup.network)
 
     /* PROTOBUF */
     implementation(libs.androidx.datastore)
@@ -109,15 +123,24 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
-    /* JSON */
-    testImplementation("org.json:json:20240303")
+    /* WORK MANAGER */
+    implementation(libs.androidx.work.runtime.ktx)
 
+    /* NAVIGATION */
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
 
-    // ViewModel
+    /* LIFECYCLE */
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    // ViewModel utilities for Compose
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
+
+    /* FIREBASE */
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.database)
+
+    /* COIL */
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 }
