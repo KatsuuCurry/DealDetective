@@ -162,10 +162,7 @@ class AccountViewModel(
         viewModelScope.launch {
             val builder = UserProfileChangeRequest.Builder()
                 .setDisplayName(displayName)
-
-            image?.let {
-                builder.setPhotoUri(it)
-            }
+                .setPhotoUri(image)
 
             userAuthRepository.updateAccount(builder.build())
                 .onSuccess {

@@ -129,7 +129,7 @@ fun EditAccountScreen(
                             imagePicker.pickImage()
                         },
                 )
-            } else if (imgState is AsyncImagePainter.State.Loading) {
+            } else if (imgState is AsyncImagePainter.State.Loading || image == null) {
                 Icon(
                     painter = painterResource(id = R.drawable.user_box),
                     contentDescription = null,

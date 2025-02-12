@@ -25,6 +25,18 @@ fun NavigationBottomBar(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
     ) {
+        val selectedColors = NavigationBarItemDefaults.colors(
+            indicatorColor = MaterialTheme.colorScheme.primary,
+            selectedIconColor = MaterialTheme.colorScheme.inversePrimary,
+            selectedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            disabledIconColor = MaterialTheme.colorScheme.inversePrimary,
+            disabledTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        )
+        val disabledColors = NavigationBarItemDefaults.colors(
+            indicatorColor = MaterialTheme.colorScheme.primary,
+            disabledIconColor = MaterialTheme.colorScheme.onPrimary,
+            disabledTextColor = MaterialTheme.colorScheme.onPrimary,
+        )
         MainRoutesList.forEachIndexed { index, routeObj ->
             NavigationBarItem(
                 icon = {
@@ -53,13 +65,10 @@ fun NavigationBottomBar(
                 onClick = {
                     navLambda(routeObj.route)
                 },
-                colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = MaterialTheme.colorScheme.primary,
-                    disabledIconColor = MaterialTheme.colorScheme.onPrimary,
-                    disabledTextColor = MaterialTheme.colorScheme.onPrimary,
-                    selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    selectedTextColor = MaterialTheme.colorScheme.onPrimary,
-                ),
+                colors = if (currentDestination == routeObj.route)
+                    selectedColors
+                else
+                    disabledColors,
             )
         }
     }

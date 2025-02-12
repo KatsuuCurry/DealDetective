@@ -123,7 +123,7 @@ fun AccountScreen(
                         .clip(CircleShape)
                         .padding(16.dp),
                 )
-            } else if (imgState is AsyncImagePainter.State.Loading) {
+            } else if (imgState is AsyncImagePainter.State.Loading || user.photoUrl == null) {
                 Icon(
                     painter = painterResource(id = R.drawable.user_box),
                     contentDescription = null,

@@ -70,7 +70,7 @@ fun ShoppingListScreen(
             BottomAppBar(
                 modifier = modifier,
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
             ) {
                 if (shoppingListUiState !is ShoppingListUiState.Display) {
                     Text(
@@ -131,7 +131,7 @@ fun ShoppingListScreen(
         LazyVerticalStaggeredGrid(
             state = lazyStaggeredGridState,
             modifier = modifier.padding(innerPadding),
-            columns = StaggeredGridCells.Adaptive(200.dp),
+            columns = StaggeredGridCells.Adaptive(150.dp),
         ) {
             item("Filters", span = StaggeredGridItemSpan.FullLine) {
                 FiltersRow(
