@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option java_package = "com.the_stilton_assistants.dealdetective.model";
+option java_multiple_files = true;
+
+message StoresSettings {
+  int32 version = 1;
+  map<int32, StoreSettings> storesSettings = 2;
+}
+
+enum StoreType {
+    Toggle = 0;
+    Selectable = 1;
+}
+
+message StoreSettings {
+    StoreType type = 4;
+    optional Store store = 1;
+}
+
+message Store {
+  string storeCode = 1;
+  string url = 2;
+  uint32 codPromo = 3;
+}

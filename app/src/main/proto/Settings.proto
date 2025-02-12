@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option java_package = "com.the_stilton_assistants.dealdetective.model";
+option java_multiple_files = true;
+
+enum ImagesSize {
+  SMALL = 0;
+  MEDIUM = 1;
+  LARGE = 2;
+}
+
+enum NotificationFilter {
+  ALL = 0;
+  IMPORTANT = 1;
+  ERROR_ONLY = 2;
+}
+
+message Settings {
+  ImagesSize imagesSize = 1;
+  bool boldText = 2;
+  NotificationFilter notificationFilter = 3;
+}
