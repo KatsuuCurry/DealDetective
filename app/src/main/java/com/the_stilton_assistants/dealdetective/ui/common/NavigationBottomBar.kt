@@ -57,8 +57,8 @@ fun NavigationBottomBar(
                     indicatorColor = MaterialTheme.colorScheme.primary,
                     disabledIconColor = MaterialTheme.colorScheme.onPrimary,
                     disabledTextColor = MaterialTheme.colorScheme.onPrimary,
-                    selectedIconColor = MaterialTheme.colorScheme.inversePrimary,
-                    selectedTextColor = MaterialTheme.colorScheme.inversePrimary,
+                    selectedIconColor = MaterialTheme.colorScheme.onSecondary,
+                    selectedTextColor = MaterialTheme.colorScheme.onSecondary,
                 ),
             )
         }

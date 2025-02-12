@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
-import com.koalas.trackmybudget.ui.utils.getColumnModifier
 import com.koalas.trackmybudget.ui.utils.getScrollBehaviorAndModifier
 import com.the_stilton_assistants.dealdetective.R
 import com.the_stilton_assistants.dealdetective.model.StoreId
