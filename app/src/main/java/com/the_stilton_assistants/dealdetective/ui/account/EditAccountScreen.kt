@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -22,11 +23,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import coil3.compose.AsyncImagePainter
+import coil3.compose.rememberAsyncImagePainter
 import com.koalas.trackmybudget.ui.utils.getColumnModifier
 import com.koalas.trackmybudget.ui.utils.getScrollBehaviorAndModifier
 import com.the_stilton_assistants.dealdetective.R
@@ -112,21 +114,45 @@ fun EditAccountScreen(
                 }
             }
 
-            val defaultPainter = painterResource(id = R.drawable.user_box)
-            val errorPainter = rememberVectorPainter(Icons.Default.Clear)
-            AsyncImage(
-                model = image,
-                contentDescription = null,
-                modifier = modifier
-                    .size(164.dp)
-                    .clip(CircleShape)
-                    .padding(16.dp)
-                    .clickable(enabled = enabled) {
-                        imagePicker.pickImage()
-                    },
-                fallback = defaultPainter,
-                error = errorPainter,
-            )
+            val painter = rememberAsyncImagePainter(image)
+            val imgState by painter.state.collectAsStateWithLifecycle()
+            if (imgState is AsyncImagePainter.State.Success) {
+                AsyncImage(
+                    model = painter,
+                    contentDescription = null,
+                    modifier = modifier
+                        .size(164.dp)
+                        .clip(CircleShape)
+                        .padding(16.dp)
+                        .clickable(enabled = enabled) {
+                            imagePicker.pickImage()
+                        },
+                )
+            } else if (imgState is AsyncImagePainter.State.Loading) {
+                Icon(
+                    painter = painterResource(id = R.drawable.user_box),
+                    contentDescription = null,
+                    modifier = modifier
+                        .size(164.dp)
+                        .clip(CircleShape)
+                        .padding(16.dp)
+                        .clickable(enabled = enabled) {
+                            imagePicker.pickImage()
+                        },
+                )
+            } else if (imgState is AsyncImagePainter.State.Error) {
+                Icon(
+                    imageVector = Icons.Default.Clear,
+                    contentDescription = null,
+                    modifier = modifier
+                        .size(164.dp)
+                        .clip(CircleShape)
+                        .padding(16.dp)
+                        .clickable(enabled = enabled) {
+                            imagePicker.pickImage()
+                        },
+                )
+            }
 
             Text(
                 modifier = modifier.padding(16.dp),
