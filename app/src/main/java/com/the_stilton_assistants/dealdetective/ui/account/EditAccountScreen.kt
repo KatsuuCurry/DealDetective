@@ -1,6 +1,7 @@
 package com.the_stilton_assistants.dealdetective.ui.account
 
 import android.net.Uri
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +11,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -26,7 +28,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
 import com.koalas.trackmybudget.ui.utils.getColumnModifier
@@ -117,8 +118,8 @@ fun EditAccountScreen(
             val painter = rememberAsyncImagePainter(image)
             val imgState by painter.state.collectAsStateWithLifecycle()
             if (imgState is AsyncImagePainter.State.Success) {
-                AsyncImage(
-                    model = painter,
+                Image(
+                    painter = imgState.painter!!,
                     contentDescription = null,
                     modifier = modifier
                         .size(164.dp)
@@ -151,6 +152,12 @@ fun EditAccountScreen(
                         .clickable(enabled = enabled) {
                             imagePicker.pickImage()
                         },
+                )
+            } else {
+                CircularProgressIndicator(
+                    modifier = modifier
+                        .size(164.dp)
+                        .padding(16.dp),
                 )
             }
 

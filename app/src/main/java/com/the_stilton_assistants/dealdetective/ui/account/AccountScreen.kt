@@ -2,6 +2,7 @@ package com.the_stilton_assistants.dealdetective.ui.account
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,7 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Build
@@ -21,6 +24,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -40,10 +44,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
-import com.koalas.trackmybudget.ui.utils.getColumnModifier
 import com.koalas.trackmybudget.ui.utils.getScrollBehaviorAndModifier
 import com.the_stilton_assistants.dealdetective.R
 import com.the_stilton_assistants.dealdetective.ui.common.LoadingComponent
@@ -95,7 +97,6 @@ fun AccountScreen(
             )
         }
     ) { innerPadding ->
-        val columnModifier = getColumnModifier(modifier, innerPadding)
         val appUiState by accountViewModel.accountUiState.collectAsStateWithLifecycle()
         if (appUiState !is AccountUiState.User) {
             LoadingComponent(
@@ -104,7 +105,9 @@ fun AccountScreen(
             return@Scaffold
         }
         Column(
-            modifier = columnModifier
+            modifier = modifier
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -112,8 +115,8 @@ fun AccountScreen(
             val painter = rememberAsyncImagePainter(user.photoUrl)
             val imgState by painter.state.collectAsStateWithLifecycle()
             if (imgState is AsyncImagePainter.State.Success) {
-                AsyncImage(
-                    model = painter,
+                Image(
+                    painter = imgState.painter!!,
                     contentDescription = null,
                     modifier = modifier
                         .size(164.dp)
@@ -136,6 +139,12 @@ fun AccountScreen(
                     modifier = modifier
                         .size(164.dp)
                         .clip(CircleShape)
+                        .padding(16.dp),
+                )
+            } else {
+                CircularProgressIndicator(
+                    modifier = modifier
+                        .size(164.dp)
                         .padding(16.dp),
                 )
             }
