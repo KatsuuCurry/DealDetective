@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * ViewModel to retrieve all items in the Room database.
+ * ViewModel to retrieve the best deals.
  */
 class DealsViewModel(
     private val productRepository: IProductsRepository,
@@ -36,6 +36,9 @@ class DealsViewModel(
 
     var isInitialized = false
 
+    /**
+     * Initializes the view model.
+     */
     @MainThread
     fun initialize() {
         if (isInitialized) return
@@ -77,6 +80,9 @@ class DealsViewModel(
         }
     }
 
+    /**
+     * Reorders the products based on the discount percentage and the product name.
+     */
     override fun reordersProducts(products: List<Product>): List<Product> {
         return if (_productsOrderMutableState.value == ProductsOrder.ASC) {
             products.sortedWith(compareByDescending<Product> { calculateDiscountPercentage(it) }
@@ -87,6 +93,9 @@ class DealsViewModel(
         }
     }
 
+    /**
+     * Calculates the discount percentage of a product.
+     */
     private fun calculateDiscountPercentage(product: Product): Double {
         return ((product.originalPrice!! - product.discountedPrice) / product.originalPrice!!) * 100
     }

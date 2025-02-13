@@ -27,7 +27,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 /**
- * ViewModel to retrieve all items in the Room database.
+ * ViewModel to retrieve all Products.
  */
 class ProductsViewModel(
     private val productRepository: IProductsRepository,
@@ -35,23 +35,32 @@ class ProductsViewModel(
     private val dispatcherDefault: CoroutineDispatcher = Dispatchers.Default,
 ) : AProductsViewModel() {
     /**
-     * Holds deals ui state. The list of items are retrieved from [IProductsRepository] and mapped
-     * to [CategoriesUiState]
+     * Holds Products ui state. The list of items are retrieved from [IProductsRepository] and mapped
+     * to [ProductsUiState]
      */
-    private val _categoriesUiMutableState: MutableStateFlow<CategoriesUiState> =
-        MutableStateFlow(CategoriesUiState.Loading)
-    val categoriesUiState: StateFlow<CategoriesUiState> = _categoriesUiMutableState.asStateFlow()
+    private val _productsUiMutableState: MutableStateFlow<ProductsUiState> =
+        MutableStateFlow(ProductsUiState.Loading)
+    val productsUiState: StateFlow<ProductsUiState> = _productsUiMutableState.asStateFlow()
 
+    /**
+     * State for the selected store.
+     */
     private val _storeSelectedMutableState: MutableStateFlow<StoreId> =
         MutableStateFlow(StoreId.UNKNOWN)
     val storeSelectedState: StateFlow<StoreId> = _storeSelectedMutableState.asStateFlow()
 
+    /**
+     * State for the categories.
+     */
     private val _categoriesMutableState = MutableStateFlow(mutableListOf<String>())
     val categoriesState: StateFlow<List<String>> = _categoriesMutableState.asStateFlow()
 
     private var subScope: CoroutineScope? = null
     private var isInitialized = false
 
+    /**
+     * Initializes the view model.
+     */
     @OptIn(ExperimentalCoroutinesApi::class)
     @MainThread
     fun initialize() {
@@ -67,12 +76,12 @@ class ProductsViewModel(
                     productRepository.getProductsByStoreFlow(storeId.value)
                 }
                 if (flowResult is Result.Error) {
-                    _categoriesUiMutableState.value =
-                        CategoriesUiState.Error(flowResult.error.message)
+                    _productsUiMutableState.value =
+                        ProductsUiState.Error(flowResult.error.message)
                     return@collect
                 }
 
-                _categoriesUiMutableState.value = CategoriesUiState.Loading
+                _productsUiMutableState.value = ProductsUiState.Loading
 
                 runBlocking {
                     if (subScope != null) {
@@ -98,14 +107,14 @@ class ProductsViewModel(
                             }
                         }
                     }.collect { (products, reorderedProducts) ->
-                        _categoriesUiMutableState.update { currentState ->
-                            if (currentState is CategoriesUiState.Loading) {
-                                CategoriesUiState.Display(
+                        _productsUiMutableState.update { currentState ->
+                            if (currentState is ProductsUiState.Loading) {
+                                ProductsUiState.Display(
                                     filteredProductList = reorderedProducts,
                                     productList = products,
                                 )
                             } else {
-                                (currentState as CategoriesUiState.Display).copy(
+                                (currentState as ProductsUiState.Display).copy(
                                     filteredProductList = reorderedProducts,
                                     productList = products,
                                 )
@@ -117,15 +126,24 @@ class ProductsViewModel(
         }
     }
 
+    /**
+     * Retrieves the list of categories for the selected store.
+     */
     fun getCategoryList(storeId: StoreId): List<Pair<String, String>> {
         require(storeId != StoreId.UNKNOWN)
         return storesServiceHandler.getStoreCategory(storeId)
     }
 
+    /**
+     * Selects a store.
+     */
     fun selectStore(storeId: StoreId) {
         _storeSelectedMutableState.value = storeId
     }
 
+    /**
+     * Adds a category to the list of categories.
+     */
     fun addCategory(category: String) {
         require(!_categoriesMutableState.value.contains(category))
         _categoriesMutableState.update { currentList ->
@@ -133,6 +151,9 @@ class ProductsViewModel(
         }
     }
 
+    /**
+     * Removes a category from the list of categories.
+     */
     fun removeCategory(category: String) {
         require(_categoriesMutableState.value.contains(category))
         _categoriesMutableState.update { currentList ->
@@ -140,6 +161,9 @@ class ProductsViewModel(
         }
     }
 
+    /**
+     * Clears the list of categories.
+     */
     override fun applyFilter(products: List<Product>): List<Product> {
         return products.filter { product ->
             val matchesCategory =
@@ -170,13 +194,13 @@ class ProductsViewModel(
 }
 
 /**
- * Ui State for Categories screen.
+ * Ui State for the Products screen.
  */
-sealed interface CategoriesUiState {
-    object Loading : CategoriesUiState
+sealed interface ProductsUiState {
+    object Loading : ProductsUiState
     data class Display(
         val filteredProductList: List<Product> = listOf(),
         val productList: List<Product> = listOf(),
-    ) : CategoriesUiState
-    data class Error(val message: String) : CategoriesUiState
+    ) : ProductsUiState
+    data class Error(val message: String) : ProductsUiState
 }

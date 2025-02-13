@@ -60,7 +60,7 @@ import com.the_stilton_assistants.dealdetective.ui.common.ProductCard
 import com.the_stilton_assistants.dealdetective.ui.navigation.ProductsRoute
 import com.the_stilton_assistants.dealdetective.ui.navigation.ScreenRoute
 import com.the_stilton_assistants.dealdetective.ui.navigation.ShoppingListRoute
-import com.the_stilton_assistants.dealdetective.viewmodel.CategoriesUiState
+import com.the_stilton_assistants.dealdetective.viewmodel.ProductsUiState
 import com.the_stilton_assistants.dealdetective.viewmodel.ProductsViewModel
 import com.the_stilton_assistants.dealdetective.viewmodel.SettingsUiState
 import kotlinx.coroutines.flow.StateFlow
@@ -151,8 +151,8 @@ fun ProductsScreen(
             )
         }
 
-        val categoriesUiState by viewModel.categoriesUiState.collectAsStateWithLifecycle()
-        if (categoriesUiState is CategoriesUiState.Loading) {
+        val productsUiState by viewModel.productsUiState.collectAsStateWithLifecycle()
+        if (productsUiState is ProductsUiState.Loading) {
             LoadingComponent(
                 modifier = modifier
                     .padding(innerPadding)
@@ -160,17 +160,17 @@ fun ProductsScreen(
             )
             return@Scaffold
         }
-        if (categoriesUiState is CategoriesUiState.Error) {
+        if (productsUiState is ProductsUiState.Error) {
             Text(
                 modifier = modifier
                     .padding(innerPadding)
                     .fillMaxSize(),
-                text = (categoriesUiState as CategoriesUiState.Error).message,
+                text = (productsUiState as ProductsUiState.Error).message,
             )
             return@Scaffold
         }
 
-        val state = categoriesUiState as CategoriesUiState.Display
+        val state = productsUiState as ProductsUiState.Display
         val productsList = state.productList
         val filteredProductList = state.filteredProductList
         if (productsList.isEmpty()) {

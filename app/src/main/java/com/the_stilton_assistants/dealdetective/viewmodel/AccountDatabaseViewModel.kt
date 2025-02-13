@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 /**
- * ViewModel to retrieve all items in the Room database.
+ * ViewModel to upload and retrieve user data from the Firebase database.
  */
 class AccountDatabaseViewModel(
     private val userAuthRepository: IUserAuthRepository,
@@ -26,6 +26,9 @@ class AccountDatabaseViewModel(
     private val settingsRepository: ISettingsRepository,
 ) : BaseViewModel() {
 
+    /**
+     * Uploads user data to the Firebase database.
+     */
     fun uploadUserData() {
         startOperation()
         viewModelScope.launch {
@@ -70,6 +73,9 @@ class AccountDatabaseViewModel(
         }
     }
 
+    /**
+     * Retrieves user data from the Firebase database.
+     */
     fun retrieveUserData() {
         startOperation()
         viewModelScope.launch {
@@ -160,6 +166,9 @@ class AccountDatabaseViewModel(
     }
 }
 
+/**
+ * Success messages for the AccountDatabaseViewModel.
+ */
 sealed interface AccountDBSuccessMessages: SuccessMessage {
     object UploadUserDataSuccess: AccountDBSuccessMessages {
         override val message = "Caricamento dati utente avvenuto con successo"
@@ -169,6 +178,9 @@ sealed interface AccountDBSuccessMessages: SuccessMessage {
     }
 }
 
+/**
+ * Error messages for the AccountDatabaseViewModel.
+ */
 sealed interface AccountDBErrorMessages: ErrorMessage {
     object UserIsNull: AccountDBErrorMessages {
         override val message = "L'utente è nullo"

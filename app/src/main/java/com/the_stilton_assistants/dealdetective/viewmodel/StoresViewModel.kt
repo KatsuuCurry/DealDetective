@@ -22,6 +22,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/**
+ * ViewModel to retrieve all Stores.
+ */
 class StoresViewModel(
     private val storesSettingsRepository: IStoresSettingsRepository,
     private val productsRepository: IProductsRepository,
@@ -29,12 +32,19 @@ class StoresViewModel(
     private val appScope: CoroutineScope,
 ): BaseViewModel() {
 
+    /**
+     * Holds stores ui state. The list of items are retrieved from [IStoresSettingsRepository]
+     * and mapped to [StoresUiState]
+     */
     private var _storesUiMutableState: MutableStateFlow<StoresUiState> =
         MutableStateFlow(StoresUiState.Loading)
     val storesUiState: StateFlow<StoresUiState> = _storesUiMutableState.asStateFlow()
 
     var isInitialized = false
 
+    /**
+     * Initializes the view model.
+     */
     @MainThread
     fun initialize() {
         if (isInitialized) return
@@ -66,6 +76,9 @@ class StoresViewModel(
         }
     }
 
+    /**
+     * Enables a store.
+     */
     fun enableStore(storeId: Int) {
         startOperation()
         viewModelScope.launch {
@@ -85,6 +98,9 @@ class StoresViewModel(
         }
     }
 
+    /**
+     * Disables a store.
+     */
     fun disableStore(storeId: Int) {
         startOperation()
         viewModelScope.launch {
@@ -105,6 +121,9 @@ class StoresViewModel(
         }
     }
 
+    /**
+     * Inserts a new store.
+     */
     fun insertStore(storeId: StoreId, url: String) {
         startOperation()
         viewModelScope.launch {
@@ -122,6 +141,9 @@ class StoresViewModel(
         }
     }
 
+    /**
+     * Removes a store.
+     */
     fun removeStore(storeId: Int) {
         startOperation()
         viewModelScope.launch {
@@ -161,7 +183,7 @@ class StoresViewModel(
 }
 
 /**
- * Ui State for Supermarkets screen.
+ * Ui State for Stores screen.
  */
 sealed interface StoresUiState {
     object Loading : StoresUiState
@@ -169,6 +191,9 @@ sealed interface StoresUiState {
     data class Error(val message: String) : StoresUiState
 }
 
+/**
+ * Success messages for the StoresViewModel.
+ */
 sealed interface StoresSuccessMessages : SuccessMessage {
     object StoreEnabled : StoresSuccessMessages {
         override val message = "Negozio Abilitato"

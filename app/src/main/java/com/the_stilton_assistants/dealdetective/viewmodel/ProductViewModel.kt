@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
- * ViewModel to retrieve all items in the Room database.
+ * ViewModel to retrieve a Product.
  */
 class ProductViewModel(
     private val productRepository: IProductsRepository,
@@ -32,6 +32,9 @@ class ProductViewModel(
 
     var isInitialized = false
 
+    /**
+     * Initializes the view model.
+     */
     @MainThread
     fun initialize(storeId: Int, productName: String) {
         if (isInitialized) return
@@ -61,6 +64,9 @@ class ProductViewModel(
         }
     }
 
+    /**
+     * Updates the favorite status of the product.
+     */
     fun updateFavoriteStatus(isFavorite: Boolean) {
         startOperation()
         viewModelScope.launch {
@@ -102,12 +108,18 @@ sealed interface ProductUiState {
     data class Error(val message: String) : ProductUiState
 }
 
+/**
+ * Success messages for the ProductViewModel.
+ */
 sealed interface ProductSuccessMessages : SuccessMessage {
     object FavoriteStatusUpdated : ProductSuccessMessages {
         override val message = "Prodotto Aggiunto alla Lista della Spesa"
     }
 }
 
+/**
+ * Error messages for the ProductViewModel.
+ */
 sealed interface ProductErrorMessages : ErrorMessage {
     object ProductNotFound : ProductErrorMessages {
         override val message = "Prodotto non trovato"

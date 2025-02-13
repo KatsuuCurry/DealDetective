@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * ViewModel to retrieve all items in the Room database.
+ * ViewModel to retrieve all favourite Products.
  */
 class ShoppingListViewModel(
     private val productRepository: IProductsRepository,
@@ -36,6 +36,9 @@ class ShoppingListViewModel(
 
     var isInitialized = false
 
+    /**
+     * Initializes the view model.
+     */
     @MainThread
     fun initialize() {
         if (isInitialized) return
@@ -84,6 +87,9 @@ class ShoppingListViewModel(
         }
     }
 
+    /**
+     * Calculates the total amount of the products.
+     */
     private suspend fun calculateTotalAmount(products: List<Product>): Double {
         return withContext(dispatcherDefault) {
             products.sumOf { it.discountedPrice }

@@ -15,7 +15,7 @@ fun CreationExtras.dealDetectiveAppContainer(): IAppContainer =
 
 /**
  * Extension function to queries for [DealDetectiveApplication] object and returns an instance of
- * [IAppContainer].
+ * [CoroutineScope], the app scope.
  */
 fun CreationExtras.dealDetectiveAppCoroutineScope(): CoroutineScope =
     (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as DealDetectiveApplication).applicationScope

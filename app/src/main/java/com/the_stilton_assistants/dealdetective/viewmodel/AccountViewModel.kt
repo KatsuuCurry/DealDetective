@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
- * ViewModel to retrieve all items in the Room database.
+ * ViewModel to manage the user account.
  */
 class AccountViewModel(
     private val userAuthRepository: IUserAuthRepository,
@@ -34,12 +34,18 @@ class AccountViewModel(
         MutableStateFlow(AccountUiState.Loading)
     val accountUiState: StateFlow<AccountUiState> = _accountUiMutableState.asStateFlow()
 
+    /**
+     * Holds the settings state.
+     */
     private var _settingsUiMutableState: MutableStateFlow<SettingsUiState> =
         MutableStateFlow(SettingsUiState.Loading)
     val settingsUiState: StateFlow<SettingsUiState> = _settingsUiMutableState.asStateFlow()
 
     var isInitialized = false
 
+    /**
+     * Initializes the ViewModel.
+     */
     @MainThread
     fun initialize() {
         if (isInitialized) return
@@ -75,6 +81,9 @@ class AccountViewModel(
         }
     }
 
+    /**
+     * Signs in the user.
+     */
     fun signIn(email: String, password: String) {
         startOperation()
         viewModelScope.launch{
@@ -91,6 +100,9 @@ class AccountViewModel(
         }
     }
 
+    /**
+     * Signs up the user.
+     */
     fun signUp(email: String, password: String) {
         startOperation()
         viewModelScope.launch {
@@ -107,6 +119,9 @@ class AccountViewModel(
         }
     }
 
+    /**
+     * Signs out the user.
+     */
     fun signOut() {
         startOperation()
         viewModelScope.launch {
@@ -125,6 +140,9 @@ class AccountViewModel(
         }
     }
 
+    /**
+     * Sends a password reset email.
+     */
     fun sendPasswordResetEmail(email: String) {
         startOperation()
         viewModelScope.launch {
@@ -141,6 +159,9 @@ class AccountViewModel(
         }
     }
 
+    /**
+     * Sends an email verification.
+     */
     fun sendEmailVerification() {
         startOperation()
         viewModelScope.launch {
@@ -157,6 +178,9 @@ class AccountViewModel(
         }
     }
 
+    /**
+     * Updates the user account.
+     */
     fun updateAccount(displayName: String, image: Uri?) {
         startOperation()
         viewModelScope.launch {
@@ -176,6 +200,9 @@ class AccountViewModel(
         }
     }
 
+    /**
+     * Updates the settings.
+     */
     fun updateSettings(
         imagesSize: ImagesSize? = null,
         boldText: Boolean? = null,
@@ -223,6 +250,9 @@ class AccountViewModel(
     }
 }
 
+/**
+ * Ui State for the Account.
+ */
 sealed interface AccountUiState {
     object Loading : AccountUiState
     object NoUser : AccountUiState
@@ -233,7 +263,7 @@ sealed interface AccountUiState {
 }
 
 /**
- * Ui State for the App.
+ * Ui State for the Settings.
  */
 sealed interface SettingsUiState {
     object Loading : SettingsUiState
@@ -241,6 +271,9 @@ sealed interface SettingsUiState {
     data class Error(val message: String) : SettingsUiState
 }
 
+/**
+ * Success messages for the AccountViewModel.
+ */
 sealed interface AccountSuccessMessages : SuccessMessage {
     object SignInSuccess : AccountSuccessMessages {
         override val message: String = "Accesso effettuato"
