@@ -1,7 +1,7 @@
 package com.the_stilton_assistants.dealdetective.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.the_stilton_assistants.dealdetective.util.NotificationType
+import com.the_stilton_assistants.dealdetective.util.INotificationBubbleHandler.NotificationType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

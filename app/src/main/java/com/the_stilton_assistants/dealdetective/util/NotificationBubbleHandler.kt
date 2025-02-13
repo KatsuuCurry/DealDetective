@@ -3,6 +3,7 @@ package com.the_stilton_assistants.dealdetective.util
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.the_stilton_assistants.dealdetective.model.NotificationFilter
+import com.the_stilton_assistants.dealdetective.util.INotificationBubbleHandler.NotificationType
 
 class NotificationBubbleHandler(
     private val context: ComponentActivity,

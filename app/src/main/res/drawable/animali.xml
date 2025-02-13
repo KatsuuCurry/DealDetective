@@ -5,6 +5,20 @@
     android:viewportWidth="1008"
     android:viewportHeight="1008">
   <path
+      android:pathData="M890.4,389.1C906.6,390.6 920.9,378.7 922.5,362.5C924,346.2 912,331.9 895.8,330.4L890.4,389.1ZM576.9,735C644.6,709.5 682.1,669.2 703.5,623.2C723.9,579.5 729.3,530.8 735.6,493.8C742.4,453.7 750.1,427.5 768,410.9C784.8,395.3 817.6,382.3 890.4,389.1L895.8,330.4C816.7,323 762.9,335.1 727.8,367.7C693.7,399.5 684.1,444.9 677.4,483.9C670.3,526 666.1,563.8 650,598.3C635.1,630.3 609.3,659.8 556.1,679.8L576.9,735Z">
+    <aapt:attr name="android:fillColor">
+      <gradient 
+          android:startX="870.3"
+          android:startY="338.3"
+          android:endX="543.7"
+          android:endY="686"
+          android:type="linear">
+        <item android:offset="0" android:color="#FFDEA877"/>
+        <item android:offset="1" android:color="#FF6F3D17"/>
+      </gradient>
+    </aapt:attr>
+  </path>
+  <path
       android:pathData="M420,419.2L420,419.2A204,204 0,0 1,624 623.2L624,646.2A204,204 0,0 1,420 850.2L420,850.2A204,204 0,0 1,216 646.2L216,623.2A204,204 0,0 1,420 419.2z"
       android:fillColor="#916B3F"/>
   <path

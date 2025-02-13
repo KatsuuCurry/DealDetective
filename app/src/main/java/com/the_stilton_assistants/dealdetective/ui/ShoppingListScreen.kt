@@ -34,6 +34,7 @@ import com.the_stilton_assistants.dealdetective.viewmodel.SettingsUiState
 import com.the_stilton_assistants.dealdetective.viewmodel.ShoppingListUiState
 import com.the_stilton_assistants.dealdetective.viewmodel.ShoppingListViewModel
 import kotlinx.coroutines.flow.StateFlow
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -93,7 +94,7 @@ fun ShoppingListScreen(
                                 append("Totale: ")
                             }
                             withStyle(MaterialTheme.typography.displaySmall.toSpanStyle()) {
-                                append(state.totalAmount.toString())
+                                append(String.format(Locale.getDefault(), "%.2f", state.totalAmount))
                             }
                         },
                         textAlign = TextAlign.Right,

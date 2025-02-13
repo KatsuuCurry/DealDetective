@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.the_stilton_assistants.dealdetective.util.INotificationBubbleHandler
-import com.the_stilton_assistants.dealdetective.util.NotificationType
+import com.the_stilton_assistants.dealdetective.util.INotificationBubbleHandler.NotificationType
 import com.the_stilton_assistants.dealdetective.util.rememberNotificationBubbleHandler
 import com.the_stilton_assistants.dealdetective.viewmodel.BaseViewModel
 import com.the_stilton_assistants.dealdetective.viewmodel.OperationUiState

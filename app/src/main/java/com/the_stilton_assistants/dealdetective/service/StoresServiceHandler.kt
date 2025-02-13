@@ -29,6 +29,9 @@ import kotlinx.coroutines.yield
 
 const val VERSION = 1
 
+/**
+ * Service handler for the stores
+ */
 class StoresServiceHandler(
     private val storesSettingsRepository: IStoresSettingsRepository,
     private val productsRepository: IProductsRepository,

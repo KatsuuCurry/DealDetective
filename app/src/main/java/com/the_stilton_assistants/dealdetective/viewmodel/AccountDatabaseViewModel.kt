@@ -9,7 +9,7 @@ import com.the_stilton_assistants.dealdetective.repository.products.IProductsRep
 import com.the_stilton_assistants.dealdetective.repository.settings.ISettingsRepository
 import com.the_stilton_assistants.dealdetective.repository.user.IUserAuthRepository
 import com.the_stilton_assistants.dealdetective.repository.user.IUserDatabaseRepository
-import com.the_stilton_assistants.dealdetective.util.NotificationType
+import com.the_stilton_assistants.dealdetective.util.INotificationBubbleHandler.NotificationType
 import com.the_stilton_assistants.dealdetective.util.Result
 import com.the_stilton_assistants.dealdetective.viewmodel.AccountDBErrorMessages.*
 import com.the_stilton_assistants.dealdetective.viewmodel.AccountDBSuccessMessages.*

@@ -29,22 +29,49 @@ import kotlinx.coroutines.flow.asStateFlow
  * App container for Dependency injection.
  */
 interface IAppContainer {
+    /**
+     * Repository for settings
+     */
     val settingsRepository: ISettingsRepository
 
+    /**
+     * Repository for stores settings
+     */
     val storesSettingsRepository: IStoresSettingsRepository
 
+    /**
+     * Repository for products
+     */
     val productsRepository: IProductsRepository
 
+    /**
+     * Repository for user authentication
+     */
     val userAuthRepository: IUserAuthRepository
 
+    /**
+     * Repository for user database
+     */
     val userDatabaseRepository: IUserDatabaseRepository
 
+    /**
+     * Handler for stores service
+     */
     val storesServiceHandler: StoresServiceHandler
 
+    /**
+     * Flow for wifi status
+     */
     val wifiStatusFlow: Flow<WifiStatus.Status>
 
+    /**
+     * Mutable state for wifi status
+     */
     val wifiStatusMutableState: MutableStateFlow<WifiStatus.Status>
 
+    /**
+     * State for wifi status
+     */
     val wifiStatusState: StateFlow<WifiStatus.Status>
         get() = wifiStatusMutableState.asStateFlow()
 }

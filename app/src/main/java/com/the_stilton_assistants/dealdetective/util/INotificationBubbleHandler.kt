@@ -18,13 +18,13 @@ interface INotificationBubbleHandler {
      * @param message The message to be shown
      */
     fun displayBubble(message: String, type: NotificationType = NotificationType.INFO)
-}
 
-enum class NotificationType {
-    INFO,
-    IMPORTANT,
-    ERROR,
-    FORCE
+    enum class NotificationType {
+        INFO,
+        IMPORTANT,
+        ERROR,
+        FORCE
+    }
 }
 
 /**

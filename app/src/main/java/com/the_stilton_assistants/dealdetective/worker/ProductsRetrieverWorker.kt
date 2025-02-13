@@ -8,6 +8,9 @@ import com.the_stilton_assistants.dealdetective.DealDetectiveApplication
 
 private const val TAG = "ProductsRetrieverWorker"
 
+/**
+ * Worker to retrieve products from all stores.
+ */
 class ProductsRetrieverWorker(
     private val appContext: Context,
     workerParameters: WorkerParameters

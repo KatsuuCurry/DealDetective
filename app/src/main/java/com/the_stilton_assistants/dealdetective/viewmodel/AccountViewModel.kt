@@ -12,7 +12,7 @@ import com.the_stilton_assistants.dealdetective.model.NotificationFilter
 import com.the_stilton_assistants.dealdetective.model.Settings
 import com.the_stilton_assistants.dealdetective.repository.settings.ISettingsRepository
 import com.the_stilton_assistants.dealdetective.repository.user.IUserAuthRepository
-import com.the_stilton_assistants.dealdetective.util.NotificationType
+import com.the_stilton_assistants.dealdetective.util.INotificationBubbleHandler.NotificationType
 import com.the_stilton_assistants.dealdetective.viewmodel.AccountSuccessMessages.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

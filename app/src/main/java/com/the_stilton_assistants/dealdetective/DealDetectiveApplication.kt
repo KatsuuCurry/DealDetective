@@ -28,16 +28,19 @@ class DealDetectiveApplication : Application() {
         super.onCreate()
         appContainer = AppContainer(this)
 
+        // Initialize the stores service handler
         applicationScope.launch {
             appContainer.storesServiceHandler.initializeHandlers()
         }
 
+        // Observe wifi status
         applicationScope.launch(Dispatchers.IO) {
             appContainer.wifiStatusFlow.collect { status ->
                 appContainer.wifiStatusMutableState.value = status
             }
         }
 
+        // Schedule the worker to retrieve products
         val constraints: Constraints =
             Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -59,7 +62,7 @@ class DealDetectiveApplication : Application() {
 
     override fun onTerminate() {
         super.onTerminate()
-        // Cancel the application scope to clean up resources
+        // Cancel the application scope
         applicationScope.cancel()
     }
 }

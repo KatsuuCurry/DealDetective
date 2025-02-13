@@ -24,14 +24,14 @@ interface IActivityContainer {
 class ActivityContainer(private val activity: ComponentActivity) : IActivityContainer {
 
     /**
-     * Handler for displaying messages to the user
+     * Implementation of [INotificationBubbleHandler]
      */
     override val notificationBubbleHandler: INotificationBubbleHandler by lazy {
         NotificationBubbleHandler(activity)
     }
 
     /**
-     * Image picker
+     * Implementation of [IImagePicker]
      */
     override val imagePicker: IImagePicker by lazy {
         ImagePicker(activity)

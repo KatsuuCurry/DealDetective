@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
@@ -35,7 +36,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -44,7 +44,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -52,7 +51,6 @@ import coil3.compose.AsyncImage
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import com.koalas.trackmybudget.ui.utils.getScrollBehaviorAndModifier
-import com.the_stilton_assistants.dealdetective.R
 import com.the_stilton_assistants.dealdetective.ui.common.LoadingComponent
 import com.the_stilton_assistants.dealdetective.ui.common.TopBar
 import com.the_stilton_assistants.dealdetective.ui.navigation.AccountRoute
@@ -122,10 +120,10 @@ fun AccountScreen(
         ) {
             val user = (appUiState as AccountUiState.User).user
 
-            val defaultPainter = painterResource(id = R.drawable.user_box)
+            val defaultPainter = rememberVectorPainter(Icons.Default.AccountCircle)
             val errorPainter = rememberVectorPainter(Icons.Default.Clear)
             val loadingPainter = rememberVectorPainter(Icons.Default.Refresh)
-            var isSuccess by remember { mutableStateOf(false) }
+            var isSuccess by rememberSaveable { mutableStateOf(false) }
             AsyncImage(
                 modifier = modifier
                     .size(182.dp)

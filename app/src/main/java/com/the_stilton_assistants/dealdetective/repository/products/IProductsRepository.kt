@@ -29,7 +29,7 @@ interface IProductsRepository{
     suspend fun getProductById(storeId: Int, productName: String): Result<Product?>
 
     /**
-     * Retrieve a Product by its name and store id from the given data source.
+     * Retrieve the flow of a Product by its name and store id from the given data source.
      */
     fun getProductByIdFlow(storeId: Int, productName: String): Result<Flow<Product?>>
 
@@ -39,7 +39,7 @@ interface IProductsRepository{
     suspend fun getProductsByStoreAndCategory(storeId: Int, category: String): Result<List<Product>>
 
     /**
-     * Retrieve all the Products by their store id from the given data source as a flow.
+     * Retrieve the flow of all the Products by their store id from the given data source as a flow.
      */
     fun getProductsByStoreFlow(storeId: Int): Result<Flow<List<Product>>>
 
@@ -49,7 +49,7 @@ interface IProductsRepository{
     suspend fun getProductsByStore(storeId: Int): Result<List<Product>>
 
     /**
-     * Insert Product in the data source.
+     * Insert Products in the data source.
      */
     suspend fun insertAllProducts(vararg products: Product): Result<Unit>
 

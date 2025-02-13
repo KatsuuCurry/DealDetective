@@ -11,6 +11,9 @@ sealed class Result<out T> {
     data class Error(val error: RepositoryError) : Result<Nothing>()
     data class ServiceLayerError(val error: ServiceError) : Result<Nothing>()
 
+    /**
+     * Returns the value of the [Success] result
+     */
     suspend fun onSuccess(action: suspend (T) -> Unit): Result<T> {
         if (this is Success) {
             action(data)
@@ -18,6 +21,9 @@ sealed class Result<out T> {
         return this
     }
 
+    /**
+     * Returns the value of the [Error] result
+     */
     suspend fun onError(action: suspend (RepositoryError) -> Unit): Result<T> {
         if (this is Error) {
             action(error)
@@ -25,6 +31,9 @@ sealed class Result<out T> {
         return this
     }
 
+    /**
+     * Returns the value of the [ServiceLayerError] result
+     */
     suspend fun onServiceError(action: suspend (ServiceError) -> Unit): Result<T> {
         if (this is ServiceLayerError) {
             action(error)
